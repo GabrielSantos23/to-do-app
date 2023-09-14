@@ -23,7 +23,6 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@/hooks/useUser';
 import { BiSolidUser } from 'react-icons/bi';
 import Image from 'next/image';
-import { useKBar } from 'kbar';
 import { ProjectsNavbar } from './ProjectsNavbar';
 import { Database } from '@/types_db';
 import { Resizable } from 'react-resizable';
@@ -45,7 +44,6 @@ import ProfileDetails from './ProfileDetails';
 const Navbar = ({}) => {
   const [divVisivel, setDivVisivel] = useState('Home');
   const authModal = useAuthModal();
-  const { query } = useKBar();
   const { user } = useUser();
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -151,7 +149,6 @@ const Navbar = ({}) => {
               <Tooltip delayDuration={200}>
                 <TooltipTrigger
                   className={` cursor-pointer   hover:bg-[#2C2C2C] w-full transition duration-100 rounded-sm px-4 py-2  `}
-                  onClick={query.toggle}
                 >
                   <div className='opacity-80 flex items-center cursor-pointer gap-3'>
                     <Search width={15} height={15} />

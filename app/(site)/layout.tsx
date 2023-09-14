@@ -5,8 +5,6 @@ import { Inter, Poppins } from 'next/font/google';
 import SupabaseProvider from '@/providers/SupabaseProvider';
 import UserProvider from '@/providers/UserProvider';
 import ModalProvider from '@/providers/ModalProvider';
-import KbarProvider from '@/components/Kbar/KbarProvide';
-import Kbar from '@/components/Kbar/Kbar';
 import { ThemeProvider } from '@/components/theme-provider';
 const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
@@ -22,18 +20,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} text-[#d1ccc7] bg-[#191919] flex`}>
-        <SupabaseProvider>
-          <UserProvider>
-            <ModalProvider />
-            <ThemeProvider attribute='class' defaultTheme='dark'>
-              <KbarProvider>
-                <Navbar />
-                <Kbar />
-                {children}
-              </KbarProvider>
-            </ThemeProvider>
-          </UserProvider>
-        </SupabaseProvider>
+        <ThemeProvider defaultTheme='dark'>
+          <SupabaseProvider>
+            <UserProvider>
+              <ModalProvider />
+              <Navbar />
+              {children}
+            </UserProvider>
+          </SupabaseProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

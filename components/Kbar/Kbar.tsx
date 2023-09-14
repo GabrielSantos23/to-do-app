@@ -30,24 +30,21 @@ export default function Kbar() {
 function CommandBar() {
   return (
     <KBarPortal>
-      <KBarPositioner className='p-2 backdrop-blur-sm  flex items-center z-[10000]'>
+      <KBarPositioner className=' backdrop-blur-sm  flex items-center z-[10000]'>
         <KBarAnimator
-          className={`  w-[550px] overflow-hidden p-2  rounded-xl mb-10 opacity-0 backdrop-blur-md bg-black`}
+          className={`  w-[550px] overflow-hidden   rounded-xl mb-10 opacity-0 backdrop-blur-md bg-[#303030]`}
         >
-          <div className='flex items-center'>
+          <div className='flex items-center '>
             <Search
-              className={` w-7 ml-2
-            
+              className={` w-5 ml-2 
             `}
             />
-            <KBarSearch className={`flex px-4 w-full h-16 outline-none   `} />
-            <div
-              className={`text-[#BCBCBC] mr-4 px-2 flex items-center pb-1  cursor-default rounded-lg  `}
-            >
-              esc
-            </div>
+            <KBarSearch
+              className={`flex px-4 w-full h-16 outline-none bg-transparent  `}
+            />
           </div>
-          <div className='pb-10'>
+          <hr className='w-screen opacity-10' />
+          <div className='pb-10 mt-2'>
             <RenderResults />
           </div>
         </KBarAnimator>
@@ -78,6 +75,8 @@ function CommandButton() {
 
 function RenderResults() {
   const { results, rootActionId } = useMatches();
+
+  console.log(results);
 
   return (
     <>
