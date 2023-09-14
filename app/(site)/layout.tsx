@@ -6,6 +6,9 @@ import SupabaseProvider from '@/providers/SupabaseProvider';
 import UserProvider from '@/providers/UserProvider';
 import ModalProvider from '@/providers/ModalProvider';
 import { ThemeProvider } from '@/components/theme-provider';
+import KbarProvider from '@/components/Kbar/KbarProvide';
+import Kbar from '@/components/Kbar/Kbar';
+
 const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,12 +23,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} text-[#d1ccc7] bg-[#191919] flex`}>
-        <ThemeProvider defaultTheme='dark'>
+        <ThemeProvider defaultTheme='dark' attribute='class'>
           <SupabaseProvider>
             <UserProvider>
-              <ModalProvider />
-              <Navbar />
-              {children}
+              <KbarProvider>
+                <Kbar />
+                <ModalProvider />
+                <Navbar />
+                {children}
+              </KbarProvider>
             </UserProvider>
           </SupabaseProvider>
         </ThemeProvider>

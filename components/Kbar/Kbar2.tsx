@@ -13,8 +13,10 @@ import {
 import { Input } from '../ui/Input';
 import { Label } from '../ui/label';
 import { useEffect } from 'react';
+import { Search } from 'lucide-react';
+import { TooltipTrigger } from '../ui/tooltip';
 
-export function DialogDemo() {
+export function Kbar2() {
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 't') {
@@ -38,9 +40,14 @@ export function DialogDemo() {
   return (
     <Dialog>
       <DialogTrigger asChild className='dialog-trigger'>
-        <Button className='dialog-trigger' variant='outline'>
-          Edit Profile
-        </Button>
+        <TooltipTrigger
+          className={` cursor-pointer   hover:bg-[#2C2C2C] w-full transition duration-100 rounded-sm px-4 py-2  `}
+        >
+          <div className='opacity-80 flex w-full h-full  items-center cursor-pointer gap-3 bg-neutral '>
+            <Search width={15} height={15} />
+            <p className='text-[13px] font-medium'>Search</p>
+          </div>
+        </TooltipTrigger>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
