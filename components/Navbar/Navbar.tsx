@@ -40,13 +40,15 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import ProfileDetails from './ProfileDetails';
-import { Kbar2 } from '../Kbar/Kbar2';
+
+import { useKBar } from 'kbar';
+import { SettingsPage } from '../Settings';
 
 const Navbar = ({}) => {
   const [divVisivel, setDivVisivel] = useState('Home');
   const authModal = useAuthModal();
   const { user } = useUser();
-
+  const { query } = useKBar();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const { supabaseClient } = useSessionContext();
@@ -148,7 +150,17 @@ const Navbar = ({}) => {
             {/* Search */}
             <TooltipProvider>
               <Tooltip delayDuration={200}>
-                <Kbar2 />
+                <TooltipTrigger
+                  className={` cursor-pointer   hover:bg-[#2C2C2C] w-full transition duration-100 rounded-sm px-4 py-2  `}
+                >
+                  <div
+                    className='opacity-80 flex w-full h-full  items-center cursor-pointer gap-3 '
+                    onClick={query.toggle}
+                  >
+                    <Search width={15} height={15} />
+                    <p className='text-[13px] font-medium'>Search</p>
+                  </div>
+                </TooltipTrigger>
                 <TooltipContent className='bg-[#202020] border border-[#2C2C2C] text-white'>
                   <p className='text-xs'>Search and quickly jump to the page</p>
                   <div className=' opacity-60 text-xs'>Ctrl + K</div>
@@ -159,16 +171,7 @@ const Navbar = ({}) => {
             {/* Settings */}
             <TooltipProvider>
               <Tooltip delayDuration={200}>
-                <TooltipTrigger
-                  className={` cursor-pointer   hover:bg-[#2C2C2C] w-full transition duration-100 rounded-sm px-4 py-2  `}
-                >
-                  <div
-                    className={` -mt-1 opacity-80 flex items-center cursor-pointer gap-3 `}
-                  >
-                    <Settings width={15} height={15} />
-                    <p className='text-[13px] font-medium'>Settings</p>
-                  </div>
-                </TooltipTrigger>
+                <SettingsPage />
                 <TooltipContent className='bg-[#202020] border border-[#2C2C2C] text-white'>
                   <p className='text-xs'>Your settings</p>
                 </TooltipContent>
@@ -245,7 +248,7 @@ const Navbar = ({}) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <div className={`mt-2 ${showProjectList ? 'block' : 'hidden'}`}>
+          <div className={`mt-2 ${showProjectList ? 'block' : 'hidden'} `}>
             <ProjectList
               projects={projects}
               setProjects={setProjects}

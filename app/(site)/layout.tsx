@@ -22,7 +22,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} text-[#d1ccc7] bg-[#191919] flex`}>
+      <body
+        className={`${inter.className} scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 text-[#d1ccc7] bg-[#191919] flex`}
+      >
         <ThemeProvider defaultTheme='dark' attribute='class'>
           <SupabaseProvider>
             <UserProvider>

@@ -3,13 +3,14 @@ import React from 'react';
 import { useRegisterActions } from 'kbar';
 import { useRouter } from 'next/navigation';
 import { Database } from '@/types_db';
+import { File } from 'lucide-react';
 
 // Card component
-export const Card = ({ project }: {}) => {
+export const ProjectCard = ({ project }: { project: any }) => {
   // router
   const router = useRouter();
 
-  function getFirstLetter(name) {
+  function getFirstLetter(name: string) {
     // Verifica se a string não está vazia e se é uma string
     if (typeof name === 'string' && name.length > 0) {
       return name[0].toUpperCase(); // Retorna a primeira letra em maiúsculas
@@ -24,9 +25,10 @@ export const Card = ({ project }: {}) => {
       name: project.name,
       keywords: project.name,
       shortcut: [firstLetter],
-      perform: () => router.push('/blog-my-title'),
-      section: 'blog',
-      icon: project.emoji,
+      perform: () => router.push(project.slug),
+
+      icon: project.emoji || <File width={18} height={18} />,
+      subtitle: project.description,
     },
   ]);
 };

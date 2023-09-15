@@ -14,7 +14,13 @@ import {
   ActionId,
 } from 'kbar';
 
-import { Search } from 'lucide-react';
+import {
+  ArrowUpDown,
+  CornerDownLeft,
+  CornerUpRight,
+  Search,
+} from 'lucide-react';
+import { useUser } from '@/hooks/useUser';
 
 export default function Kbar() {
   return (
@@ -28,24 +34,38 @@ export default function Kbar() {
 }
 
 function CommandBar() {
+  const { user } = useUser();
+  const fullName = user?.user_metadata.full_name;
+  const first = fullName ? fullName.split(' ')[0] : '';
   return (
     <KBarPortal>
-      <KBarPositioner className=' backdrop-blur-sm  flex items-center z-[10000]'>
+      <KBarPositioner className='  bg-zinc-900 bg-opacity-50 flex items-center z-[10000]'>
         <KBarAnimator
-          className={`  w-[550px] overflow-hidden   rounded-xl mb-10 opacity-0 backdrop-blur-md bg-[#303030]`}
+          className={`  w-[620px] overflow-hidden   rounded-xl mb-10 opacity-0  bg-[#252525] shadow-lg  `}
         >
-          <div className='flex items-center '>
+          <div className='flex items-center px-2 '>
             <Search
-              className={` w-5 ml-2 
+              className={` w-5 ml-2  opacity-50
             `}
             />
             <KBarSearch
-              className={`flex px-4 w-full h-16 outline-none bg-transparent  `}
+              className={`flex px-4 w-full h-12 outline-none bg-transparent  `}
+              defaultPlaceholder={`Search in ${first}'s List...`}
             />
           </div>
-          <hr className='w-screen opacity-10' />
+          <hr className='w-screen border-none opacity-10 bg-white h-[1px]' />
           <div className='pb-10 mt-2'>
             <RenderResults />
+          </div>
+          <div className='border-t-[1px] px-5 py-2 opacity-60 flex gap-2 border-white border-opacity-10'>
+            <div className='flex items-center gap-2 '>
+              <ArrowUpDown size={14} color='#ffffff' strokeWidth={1.5} />
+              <p className='text-xs'>Select</p>
+            </div>
+            <div className='flex items-center gap-2 '>
+              <CornerDownLeft size={14} color='#ffffff' strokeWidth={1.5} />
+              <p className='text-xs'>Open</p>
+            </div>
           </div>
         </KBarAnimator>
       </KBarPositioner>
@@ -75,8 +95,6 @@ function CommandButton() {
 
 function RenderResults() {
   const { results, rootActionId } = useMatches();
-
-  console.log(results);
 
   return (
     <>
@@ -121,16 +139,16 @@ const ResultItem = React.forwardRef(function ResultItem(
     return action.ancestors.slice(index + 1);
   }, [action.ancestors, currentRootActionId]);
   return (
-    <div className={active ? `` : undefined}>
+    <div className={`${active ? `` : undefined} px-1.5`}>
       <div
         ref={ref}
         className={`${
-          active ? 'active rounded-lg  ' : 'transparent'
-        } 'rounded-lg px-4 py-2 flex items-center cursor-pointer justify-between  `}
+          active ? 'active   ' : 'transparent'
+        } ' rounded-lg px-4 py-2 flex items-center cursor-pointer justify-between hover:bg-[#313131] group transition duration-200  `}
       >
         <div className={`flex items-center gap-2 text-base }`}>
           <div className='flex flex-col'>
-            <div>
+            <div className='flex items-center'>
               {ancestors.length > 0 &&
                 ancestors.map((ancestor) => (
                   <React.Fragment key={ancestor.id}>
@@ -140,20 +158,25 @@ const ResultItem = React.forwardRef(function ResultItem(
                   </React.Fragment>
                 ))}
               <div
-                className={`${
-                  action?.icon ? 'flex items-center gap-2 mt-2' : ''
-                }`}
+                className={`${action?.icon ? 'flex items-center gap-2 ' : ''}`}
               >
-                <span>{action?.icon}</span>
-                <span>{action.name}</span>
+                <span className=' text-sm  '>{action?.icon}</span>
+                <span className=' text-sm font-bold capitalize'>
+                  {action.name}
+                </span>
               </div>
+              {action.subtitle && (
+                <span className='text-sm opacity-70'>
+                  &nbsp; - {action.subtitle}
+                </span>
+              )}
             </div>
-            {action.subtitle && (
-              <span className='text-sm'>{action.subtitle}</span>
-            )}
           </div>
         </div>
-        {action.shortcut?.length ? (
+        <div className='hidden group-hover:block '>
+          <CornerUpRight size={18} color='#ffffff' strokeWidth={1.5} />
+        </div>
+        {/* {action.shortcut?.length ? (
           <div aria-hidden className='grid grid-flow-col gap-2'>
             {action.shortcut.map((sc) => (
               <kbd
@@ -165,7 +188,7 @@ const ResultItem = React.forwardRef(function ResultItem(
               </kbd>
             ))}
           </div>
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );

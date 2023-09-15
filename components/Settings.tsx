@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/Button';
 import {
   Dialog,
@@ -10,46 +8,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/Dialog';
-import { Input } from '../ui/Input';
-import { Label } from '../ui/label';
-import { useEffect } from 'react';
-import { Search } from 'lucide-react';
-import { TooltipTrigger } from '../ui/tooltip';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/label';
+import { TooltipTrigger } from './ui/tooltip';
+import { Settings } from 'lucide-react';
 
-export function Kbar2() {
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === 't') {
-        // Abra o diálogo
-        const dialogTrigger = document.querySelector('.dialog-trigger'); // Substitua com a classe apropriada
-        if (dialogTrigger) {
-          dialogTrigger.click(); // Simule um clique no DialogTrigger
-        }
-      }
-    };
-
-    // Adicione o ouvinte de evento quando o componente é montado
-    document.addEventListener('keydown', handleKeyPress);
-
-    // Remova o ouvinte de evento quando o componente é desmontado
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
-
+export function SettingsPage() {
   return (
     <Dialog>
-      <DialogTrigger asChild className='dialog-trigger'>
+      <DialogTrigger asChild>
         <TooltipTrigger
           className={` cursor-pointer   hover:bg-[#2C2C2C] w-full transition duration-100 rounded-sm px-4 py-2  `}
         >
-          <div className='opacity-80 flex w-full h-full  items-center cursor-pointer gap-3 bg-neutral '>
-            <Search width={15} height={15} />
-            <p className='text-[13px] font-medium'>Search</p>
+          <div
+            className={` -mt-1 opacity-80 flex items-center cursor-pointer gap-3 `}
+          >
+            <Settings width={15} height={15} />
+            <p className='text-[13px] font-medium'>Settings</p>
           </div>
         </TooltipTrigger>
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='md:max-w-[1100px] '>
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>

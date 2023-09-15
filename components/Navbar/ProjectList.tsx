@@ -57,7 +57,11 @@ const ProjectList: React.FC<{
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='projectList' direction='vertical'>
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className=' '
+            >
               {projects.map((project, index) => (
                 <Draggable
                   key={project?.id}

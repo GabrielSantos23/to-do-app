@@ -104,7 +104,7 @@ const ProjectsNavbar: React.FC<ProjectsNavbarProps> = ({
       columns: columns.map((column, index) => ({
         name: column.name,
       })),
-      slug,
+      slug: `${slug}-${user.id}`,
       order: 0,
     };
 
