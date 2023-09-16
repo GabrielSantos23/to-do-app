@@ -41,21 +41,11 @@ import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
 const newId = uuidv4();
 interface menuFunctionsProps {
   projects: Database['public']['Tables']['projects']['Row'][];
-  setProjects: React.Dispatch<
-    React.SetStateAction<Database['public']['Tables']['projects']['Row'][]>
-  >;
-  setIsCreatingProject: React.Dispatch<React.SetStateAction<boolean>>;
   project: any;
 }
 
-const MenuFunctions: React.FC<menuFunctionsProps> = ({
-  projects,
-  setProjects,
-  project,
-  setIsCreatingProject,
-}) => {
+const MenuFunctions: React.FC<menuFunctionsProps> = ({ project, projects }) => {
   const { supabaseClient } = useSessionContext();
-  const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -71,46 +61,39 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
   };
 
   const handleSubmit = async (projectId: string) => {
-    setIsLoading(true);
+    try {
+      if (isFavorite) {
+        const { error } = await supabaseClient
+          .from('projects')
+          .update({ favorito: false })
+          .eq('id', projectId)
+          .eq('user_id', user?.id);
 
-    if (isFavorite) {
-      const { error } = await supabaseClient
-        .from('projects')
-        .update({ favorito: false })
-        .eq('id', projectId)
-        .eq('user_id', user?.id);
-
-      if (error) {
-        console.error('Error removing project from favorites:', error.message);
+        if (error) {
+          console.error(
+            'Error removing project from favorites:',
+            error.message
+          );
+        } else {
+          setIsFavorite(false);
+        }
       } else {
-        setIsFavorite(false);
-        setIsLoading(false);
+        const { error } = await supabaseClient
+          .from('projects')
+          .update({ favorito: true })
+          .eq('id', projectId)
+          .eq('user_id', user?.id);
 
-        setProjects((prevProjects) =>
-          prevProjects.map((p) =>
-            p.id === projectId ? { ...p, favorito: false } : p
-          )
-        );
+        if (error) {
+          console.error('Error adding project to favorites:', error.message);
+        } else {
+          setIsFavorite(true);
+        }
       }
-    } else {
-      const { error } = await supabaseClient
-        .from('projects')
-        .update({ favorito: true })
-        .eq('id', projectId)
-        .eq('user_id', user?.id);
 
-      if (error) {
-        console.error('Error adding project to favorites:', error.message);
-      } else {
-        setIsFavorite(true);
-        setIsLoading(false);
-
-        setProjects((prevProjects) =>
-          prevProjects.map((p) =>
-            p.id === projectId ? { ...p, favorito: true } : p
-          )
-        );
-      }
+      router.refresh();
+    } catch (error) {
+      console.error('An error occurred:', error);
     }
   };
 
@@ -131,16 +114,12 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
       console.error('Error renaming project:', error.message);
     } else {
       // Update the local state
-      setProjects((prevProjects) =>
-        prevProjects.map((p) =>
-          p.id === renamingProjectId ? { ...p, name: newProjectName } : p
-        )
-      );
 
       // Finish renaming
       setRenamingProjectId(null);
       setNewProjectName('');
     }
+    router.refresh();
   };
 
   const handleRenameFormSubmit = (e: React.FormEvent) => {
@@ -149,8 +128,6 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    setIsLoading(true);
-
     const { error } = await supabaseClient
       .from('projects')
       .delete()
@@ -159,21 +136,14 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
 
     if (error) {
       console.error('Error deleting project:', error.message);
-      setIsLoading(false);
       return;
     }
 
-    setProjects((prevProjects) =>
-      prevProjects.filter((p) => p.id !== projectId)
-    );
     handleCloseModal();
-
-    setIsLoading(false);
+    router.refresh();
   };
 
   const duplicateProject = async (projectId: string) => {
-    setIsLoading(true);
-    setIsCreatingProject(true);
     const { data: originalProjectData, error: originalProjectError } =
       await supabaseClient
         .from('projects')
@@ -186,7 +156,6 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
         'Error fetching original project data:',
         originalProjectError.message
       );
-      setIsLoading(false);
       return;
     }
 
@@ -207,13 +176,8 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
         'Error inserting duplicated project:',
         insertProjectError.message
       );
-      setIsLoading(false);
     } else {
       router.refresh();
-
-      setProjects((prevProjects) => [...prevProjects, insertedProjectData]);
-      setIsLoading(false);
-      setIsCreatingProject(false);
     }
   };
   const startRenaming = (projectId: string) => {
@@ -257,10 +221,8 @@ const MenuFunctions: React.FC<menuFunctionsProps> = ({
     if (error) {
       console.error('Error updating emoji:', error.message);
     } else {
-      setProjects((prevProjects) =>
-        prevProjects.map((p) => (p.id === project.id ? { ...p, emoji } : p))
-      );
     }
+    router.refresh();
   };
 
   return (

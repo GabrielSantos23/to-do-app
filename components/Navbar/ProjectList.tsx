@@ -9,20 +9,17 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { File } from 'lucide-react';
 
 import MenuFunctions from './menuFunctions';
+import { useRouter } from 'next/navigation';
 
-export const itemStyle =
+const itemStyle =
   'flex items-center group cursor-pointer gap-3  hover:bg-[#2C2C2C]  transition duration-100 rounded-sm py-2 mx-1 px-2 justify-between ';
 
 const ProjectList: React.FC<{
   projects: Database['public']['Tables']['projects']['Row'][];
-  setProjects: React.Dispatch<
-    React.SetStateAction<Database['public']['Tables']['projects']['Row'][]>
-  >;
-  setIsCreatingProject: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ projects, setProjects, setIsCreatingProject }) => {
+}> = ({ projects }) => {
   const { supabaseClient } = useSessionContext();
-
   const { user } = useUser();
+  const router = useRouter();
 
   const onDragEnd = async (result: any) => {
     if (!result.destination) return;
@@ -31,16 +28,12 @@ const ProjectList: React.FC<{
     const [movedProject] = updatedProjects.splice(result.source.index, 1);
     updatedProjects.splice(result.destination.index, 0, movedProject);
 
-    setProjects(updatedProjects);
-
     const newProjectOrder = updatedProjects.map((project, index) => ({
       id: project.id,
       order: index,
       user_id: user?.id,
       name: project.name,
     }));
-
-    console.log(newProjectOrder);
 
     const { error } = await supabaseClient
       .from('projects')
@@ -50,6 +43,7 @@ const ProjectList: React.FC<{
     if (error) {
       console.error('Error updating project order:', error);
     }
+    router.refresh();
   };
 
   return (
@@ -90,15 +84,9 @@ const ProjectList: React.FC<{
                           {project?.name}
                         </h3>
                       ) : (
-                        // Renderizar o span de animação quando o projeto não estiver carregado
                         <span className='w-full h-5 bg-[#1d1d20] rounded-sm animate-pulse'></span>
                       )}
-                      <MenuFunctions
-                        project={project}
-                        projects={projects}
-                        setIsCreatingProject={setIsCreatingProject}
-                        setProjects={setProjects}
-                      />
+                      <MenuFunctions project={project} projects={projects} />
                     </div>
                   )}
                 </Draggable>

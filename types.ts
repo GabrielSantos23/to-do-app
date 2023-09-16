@@ -8,6 +8,26 @@ export interface Song {
   song_path: string;
   image_path: string;
 }
+export interface Project {
+  id: string;
+  name: string;
+  order: number;
+  project_id: string;
+  user_id: string;
+  description: string;
+  favorito: boolean;
+  columns: Array<string>;
+  slug: string;
+  created_at: string;
+  emoji: string;
+}
+export interface UserInfo {
+  id: string;
+  full_name: string;
+  avatar_url: string;
+  billing_address: string;
+  payment_method: string;
+}
 
 export interface Product {
   id: string;

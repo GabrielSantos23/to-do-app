@@ -8,6 +8,7 @@ import ModalProvider from '@/providers/ModalProvider';
 import { ThemeProvider } from '@/components/theme-provider';
 import KbarProvider from '@/components/Kbar/KbarProvide';
 import Kbar from '@/components/Kbar/Kbar';
+import ToasterProvider from '@/providers/ToasterProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function RootLayout({
         className={`${inter.className} scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 text-[#d1ccc7] bg-[#191919] flex`}
       >
         <ThemeProvider defaultTheme='dark' attribute='class'>
+          <ToasterProvider />
           <SupabaseProvider>
             <UserProvider>
               <KbarProvider>
