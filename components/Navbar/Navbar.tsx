@@ -20,11 +20,12 @@ import {
 } from '../ui/dropdown-menu';
 import ProfileDetails from './ProfileDetails';
 
-import { SettingsPage } from '../Settings';
 import ResizableContainer from '../ResizableContainer';
 import getProjectsByOrder from '@/actions/getProjectsByOrder';
 import getUserInfo from '@/actions/getUserInfo';
 import KbarButton from '../Kbar/KbarButton';
+import useLoadImage from '@/hooks/useLoadImage';
+import SettingsPage from '../Settings';
 
 const Navbar = async ({}) => {
   const projects = await getProjectsByOrder();
@@ -44,13 +45,13 @@ const Navbar = async ({}) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className='flex group  items-center gap-3 hover:bg-[#2C2C2C] w-full  cursor-pointer px-4 py-3'>
-              <Image
+              {/* <Image
                 className=' rounded'
                 width={20}
                 height={20}
                 src={user.avatar_url || '/placeholder.jpeg'}
                 alt={`${first}-profile-image`}
-              />
+              /> */}
               <p className='lowercase text-sm font-semibold  flex items-center gap-2 '>
                 {first}&apos;s List{' '}
                 <span>
