@@ -1,10 +1,8 @@
 import React from 'react';
 import { ChevronsLeftRight, Plus, Search } from 'lucide-react';
 
-import Image from 'next/image';
 import { ProjectsNavbar } from './ProjectsNavbar';
-import { Database } from '@/types_db';
-import { Resizable } from 'react-resizable';
+
 import ProjectList from './ProjectList';
 import FavoriteProjects from './FavoritoProjects';
 import {
@@ -64,7 +62,7 @@ const Navbar = async ({}) => {
               </p>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className='w-80 bg-[#252525] text-white border-[#2C2C2C] border'>
+          <DropdownMenuContent className='w-80  text-white border-[#2C2C2C] border bg-[#252525]'>
             <ProfileDetails />
           </DropdownMenuContent>
         </DropdownMenu>

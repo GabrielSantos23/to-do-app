@@ -16,7 +16,7 @@ interface ProfileDetailsProps {}
 const ProfileDetails: React.FC<ProfileDetailsProps> = ({}) => {
   const { supabaseClient } = useSessionContext();
   const router = useRouter();
-  const { user } = useUser();
+  const { user, userDetails } = useUser();
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
@@ -36,21 +36,23 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({}) => {
   const first = fullName ? fullName.split(' ')[0] : '';
 
   return (
-    <div>
+    <div className='bg-[#252525]'>
       <DropdownMenuLabel>
-        <div className='flex justify-between px-2'>
+        <div className='flex justify-between px-2 '>
           <p className='text-[10px] opacity-60'>{user?.email}</p>
         </div>
-        <div className='flex p-2 gap-2'>
-          <Image
-            className=' rounded'
-            width={35}
-            height={35}
-            src={user?.user_metadata.picture || '/placeholder.jpeg'}
-            alt={`${user?.user_metadata.full_name}-profile-image`}
-          />
+        <div className='flex p-2 gap-2 items-center  '>
+          <div className='max-w-[35px] max-h-[35px] rounded '>
+            <Image
+              className=''
+              width={35}
+              height={35}
+              src={user?.user_metadata.picture || '/placeholder.jpeg'}
+              alt={`${user?.user_metadata.full_name}-profile-image`}
+            />
+          </div>
           <div>
-            <p className='text-xs'> {first}&apos;s List </p>
+            <p className='text-xs'> {userDetails?.full_name}&apos;s List </p>
             <p className='text-[10px] font-normal opacity-60'> Free Plan </p>
           </div>
         </div>

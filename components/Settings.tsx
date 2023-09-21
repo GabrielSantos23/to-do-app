@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -18,34 +17,29 @@ import { Separator } from '@/components/ui/separator';
 import { useUser } from '@/hooks/useUser';
 import Image from 'next/image';
 import { FieldValues, useForm, SubmitHandler } from 'react-hook-form';
-import useNameModal from '@/hooks/useNameModal';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import uniqid from 'uniqid';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import useLoadImage from '@/hooks/useLoadImage';
+import { ChangePassword } from './ChangePassword';
 
 const SettingsPage = () => {
   const { user, userDetails } = useUser();
-  const fullName = user?.user_metadata.full_name;
-  const first = fullName ? fullName.split(' ')[0] : '';
-  const [isLoading, setIsLoading] = useState(false);
+
   const supabaseClient = useSupabaseClient();
-  const [isEditingPicture, setIsEditingPicture] = useState(false);
+
   const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
+      name: userDetails?.full_name || '',
       image: null,
     },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
     try {
-      setIsLoading(true);
-
       if (!user) {
         toast.error('Missing Fields');
       }
@@ -65,7 +59,6 @@ const SettingsPage = () => {
             });
 
         if (imageError) {
-          setIsLoading(false);
           return toast.error('Failed image upload.');
         }
         await supabaseClient
@@ -87,13 +80,9 @@ const SettingsPage = () => {
       toast.error('Something went wrong');
       console.log(error);
     } finally {
-      setIsLoading(false);
-      setIsEditingPicture(false);
     }
   };
   const loadImage = useLoadImage(userDetails);
-
-  console.log(user);
 
   return (
     <Dialog>
@@ -123,7 +112,7 @@ const SettingsPage = () => {
                   width={60}
                   height={60}
                   src={loadImage || '/placeholder.jpeg'}
-                  alt={`${user?.user_metadata.full_name}-profile-image`}
+                  alt={`${userDetails?.full_name}-profile-image`}
                 />
 
                 <div className='absolute group-hover:flex hidden top-0 right-0 h-4 w-4 bg-[#272727]  text-opacity-50 text-white  items-center justify-center rounded-full'>
@@ -144,7 +133,6 @@ const SettingsPage = () => {
                 className='h-7 bg-[#2C2C2C] rounded'
                 id='name'
                 {...register('name', { required: true })}
-                defaultValue={fullName || ''}
               />
             </div>
           </div>
@@ -173,9 +161,14 @@ const SettingsPage = () => {
                   Set a permanent password to login to your account.
                 </p>
               </div>
-              <Button className='bg-transparent rounded w-30 border border-white border-opacity-10 hover:bg-[#2C2C2C] h-8 text-xs text-white'>
-                Change Password
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className='bg-transparent rounded w-30 border border-white border-opacity-10 hover:bg-[#2C2C2C] h-8 text-xs text-white'>
+                    Change Password
+                  </Button>
+                </DialogTrigger>
+                <ChangePassword />
+              </Dialog>
             </div>
           </div>
 

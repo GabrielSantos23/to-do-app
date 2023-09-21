@@ -10,9 +10,7 @@ import { File } from 'lucide-react';
 
 import MenuFunctions from './menuFunctions';
 import { useRouter } from 'next/navigation';
-
-const itemStyle =
-  'flex items-center group cursor-pointer gap-3  hover:bg-[#2C2C2C]  transition duration-100 rounded-sm py-2 mx-1 px-2 justify-between ';
+import { useState } from 'react';
 
 const ProjectList: React.FC<{
   projects: Database['public']['Tables']['projects']['Row'][];
@@ -20,8 +18,14 @@ const ProjectList: React.FC<{
   const { supabaseClient } = useSessionContext();
   const { user } = useUser();
   const router = useRouter();
+  const [isloading, setIsloading] = useState(false);
+
+  const itemStyle = `flex items-center group cursor-pointer gap-3 ${
+    !isloading && 'hover:bg-[#2C2C2C] '
+  }  transition duration-100 rounded-sm py-2 mx-1 px-2 justify-between `;
 
   const onDragEnd = async (result: any) => {
+    setIsloading(true);
     if (!result.destination) return;
 
     const updatedProjects = [...projects];
@@ -40,16 +44,24 @@ const ProjectList: React.FC<{
       .upsert(newProjectOrder, {})
       .eq('user_id', user?.id);
 
+    router.refresh();
+
     if (error) {
       console.error('Error updating project order:', error);
     }
-    router.refresh();
+    setTimeout(() => {
+      setIsloading(false);
+    }, 1000);
   };
 
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId='projectList' direction='vertical'>
+        <Droppable
+          droppableId='projectList'
+          key='projectList'
+          direction='vertical'
+        >
           {(provided) => (
             <div
               {...provided.droppableProps}
@@ -64,33 +76,52 @@ const ProjectList: React.FC<{
                 >
                   {(provided) => (
                     <div
-                      className={`${itemStyle} relative`}
+                      className={` ${itemStyle} relative`}
+                      ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      ref={provided.innerRef}
                     >
-                      {project ? (
-                        <h3
-                          className='text-sm flex opacity-80 items-center justify-start gap-2 truncate '
-                          style={{ zIndex: 2 }}
-                        >
-                          {project?.emoji ? (
-                            <span className='h-[15px] text-sm'>
-                              {project?.emoji}
-                            </span>
-                          ) : (
-                            <File width={15} height={15} />
-                          )}
-                          {project?.name}
-                        </h3>
-                      ) : (
-                        <span className='w-full h-5 bg-[#1d1d20] rounded-sm animate-pulse'></span>
-                      )}
+                      <div>
+                        {project ? (
+                          <h3
+                            className='text-sm flex opacity-80 items-center justify-start gap-2 truncate '
+                            style={{ zIndex: 2 }}
+                          >
+                            {isloading && project.emoji ? (
+                              <span className='w-full h-5 bg-[#2F2F2F] rounded-sm animate-pulse text-transparent'>
+                                {project?.emoji}
+                              </span>
+                            ) : project?.emoji && !isloading ? (
+                              <span className='h-[15px] w-[15px] text-sm'>
+                                {project?.emoji}
+                              </span>
+                            ) : !project.emoji && isloading ? (
+                              <span className='w-full h-5 bg-[#2F2F2F] rounded-sm animate-pulse text-transparent'>
+                                <File width={15} height={15} />
+                              </span>
+                            ) : (
+                              !project.emoji &&
+                              !isloading && <File width={15} height={15} />
+                            )}
+
+                            {isloading ? (
+                              <span className='w-full h-5 bg-[#2F2F2F] rounded-sm animate-pulse text-transparent '>
+                                {project.name}
+                              </span>
+                            ) : (
+                              <p>{project.name}</p>
+                            )}
+                          </h3>
+                        ) : (
+                          <span className='w-full h-5 bg-[#2F2F2F] rounded-sm animate-pulse'></span>
+                        )}
+                      </div>
                       <MenuFunctions project={project} projects={projects} />
                     </div>
                   )}
                 </Draggable>
               ))}
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
