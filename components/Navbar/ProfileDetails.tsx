@@ -6,6 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import useLoadImage from '@/hooks/useLoadImage';
 import { useUser } from '@/hooks/useUser';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 import Image from 'next/image';
@@ -17,6 +18,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({}) => {
   const { supabaseClient } = useSessionContext();
   const router = useRouter();
   const { user, userDetails } = useUser();
+  const loadImage = useLoadImage(userDetails);
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
@@ -47,7 +49,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({}) => {
               className=''
               width={35}
               height={35}
-              src={user?.user_metadata.picture || '/placeholder.jpeg'}
+              src={loadImage || '/placeholder.jpeg'}
               alt={`${user?.user_metadata.full_name}-profile-image`}
             />
           </div>

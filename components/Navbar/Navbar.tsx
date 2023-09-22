@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ChevronsLeftRight, Plus, Search } from 'lucide-react';
 
@@ -24,15 +26,23 @@ import getUserInfo from '@/actions/getUserInfo';
 import KbarButton from '../Kbar/KbarButton';
 import useLoadImage from '@/hooks/useLoadImage';
 import SettingsPage from '../Settings';
+import { Database } from '@/types_db';
+import { useUser } from '@/hooks/useUser';
+import Image from 'next/image';
 
-const Navbar = async ({}) => {
-  const projects = await getProjectsByOrder();
-  const user: any = await getUserInfo();
+interface NavbarProps {
+  projects: Database['public']['Tables']['projects']['Row'][];
+  favorito: any;
+}
 
-  const fullName = user?.full_name;
+const Navbar: React.FC<NavbarProps> = ({ projects, favorito }) => {
+  const { user, userDetails } = useUser();
+
+  const fullName = userDetails?.full_name;
   const first = fullName ? fullName.split(' ')[0] : '';
+  const loadImage = useLoadImage(userDetails);
 
-  if (user.length === 0) {
+  if (!user) {
     return null;
   }
 
@@ -43,13 +53,13 @@ const Navbar = async ({}) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className='flex group  items-center gap-3 hover:bg-[#2C2C2C] w-full  cursor-pointer px-4 py-3'>
-              {/* <Image
+              <Image
                 className=' rounded'
                 width={20}
                 height={20}
-                src={user.avatar_url || '/placeholder.jpeg'}
-                alt={`${first}-profile-image`}
-              /> */}
+                src={loadImage || '/placeholder.jpeg'}
+                alt={`${userDetails?.first_name}-profile-image`}
+              />
               <p className='lowercase text-sm font-semibold  flex items-center gap-2 '>
                 {first}&apos;s List{' '}
                 <span>
@@ -157,8 +167,7 @@ const Navbar = async ({}) => {
       <div className='mt-5 group flex flex-col px-4 py-3'>
         <div className='flex flex-col  justify-between '>
           <div>
-            {' '}
-            <FavoriteProjects projects={projects} />
+            <FavoriteProjects projects={projects} favorito={favorito} />
           </div>
         </div>
       </div>

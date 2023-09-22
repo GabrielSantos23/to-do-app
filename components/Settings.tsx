@@ -132,6 +132,7 @@ const SettingsPage = () => {
               <Input
                 className='h-7 bg-[#2C2C2C] rounded'
                 id='name'
+                defaultValue={userDetails?.full_name}
                 {...register('name', { required: true })}
               />
             </div>

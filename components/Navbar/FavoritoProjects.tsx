@@ -1,3 +1,4 @@
+'use client';
 import { Database } from '@/types_db';
 
 import { File } from 'lucide-react';
@@ -5,12 +6,13 @@ import MenuFunctions from './menuFunctions';
 import getFavoriteItems from '@/actions/getFavoriteItems';
 interface FavoriteProjectsProps {
   projects: Database['public']['Tables']['projects']['Row'][];
+  favorito: any;
 }
 
-const FavoriteProjects: React.FC<FavoriteProjectsProps> = async ({
+const FavoriteProjects: React.FC<FavoriteProjectsProps> = ({
   projects,
+  favorito,
 }) => {
-  const favorito = await getFavoriteItems();
   const itemStyle =
     'flex items-center group cursor-pointer gap-3  hover:bg-[#2C2C2C]  transition duration-100 rounded-sm py-2 mx-1 px-2 justify-between ';
 
