@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ projects, favorito }) => {
                 width={20}
                 height={20}
                 src={loadImage || '/placeholder.jpeg'}
-                alt={`${userDetails?.first_name}-profile-image`}
+                alt={`${userDetails?.full_name}-profile-image`}
               />
               <p className='lowercase text-sm font-semibold  flex items-center gap-2 '>
                 {first}&apos;s List{' '}

@@ -1,5 +1,3 @@
-'use client';
-
 import { Subscription, UserDetails } from '@/types';
 import {
   useUser as useSupaUser,

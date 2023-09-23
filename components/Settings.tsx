@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import { TooltipTrigger } from './ui/tooltip';
-import { Settings, X } from 'lucide-react';
+import { ChevronRight, Settings, X } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useUser } from '@/hooks/useUser';
 import Image from 'next/image';
@@ -23,12 +23,13 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
 import useLoadImage from '@/hooks/useLoadImage';
 import { ChangePassword } from './ChangePassword';
+import { useState } from 'react';
+import { DeleteAccount } from './DeleteAccount';
 
 const SettingsPage = () => {
   const { user, userDetails } = useUser();
-
   const supabaseClient = useSupabaseClient();
-
+  const [isloading, setIsloading] = useState(false);
   const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
@@ -40,8 +41,10 @@ const SettingsPage = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
     try {
+      setIsloading(true);
       if (!user) {
         toast.error('Missing Fields');
+        setIsloading(false);
       }
 
       const { name, image } = values;
@@ -80,6 +83,9 @@ const SettingsPage = () => {
       toast.error('Something went wrong');
       console.log(error);
     } finally {
+      setIsloading(false);
+
+      window.location.reload();
     }
   };
   const loadImage = useLoadImage(userDetails);
@@ -154,8 +160,8 @@ const SettingsPage = () => {
               </Button>
             </div>
             {/* change password */}
+
             <div className='mt-3 flex justify-between'>
-              {/* change email */}
               <div className='mt-2'>
                 <Label className=' '>Password</Label>
                 <p className='opacity-50 text-xs '>
@@ -172,9 +178,55 @@ const SettingsPage = () => {
               </Dialog>
             </div>
           </div>
+          <div className='mt-5'>
+            <DialogTitle className='mt-5 mb-2 text-base'>Suporte </DialogTitle>
+            <Separator className='bg-white opacity-20 ' />
+
+            {/* log out all devices */}
+
+            <div className='flex items-center w-full justify-between group mt-4'>
+              <div>
+                <Label>Log out of all devices</Label>
+                <p className='opacity-50 text-xs '>
+                  Log out of all other active sessions on other devices besides
+                  this one.
+                </p>
+              </div>
+              <div className='px-0.5 py-0 hover:bg-[#2C2C2C] rounded'>
+                <ChevronRight
+                  className='opacity-50 cursor-pointer'
+                  width={18}
+                />
+              </div>
+            </div>
+
+            {/* delete acount */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className='flex items-center w-full justify-between  mt-4 mb-4 cursor-pointer'>
+                  <div>
+                    <Label className='text-red-500'>Delete my account</Label>
+                    <p className='opacity-50 text-xs '>
+                      Permanently delete the account and remove access from all
+                      workspaces.
+                    </p>
+                  </div>
+                  <div className='px-0.5 py-0 hover:bg-[#2C2C2C] rounded'>
+                    <ChevronRight
+                      className='opacity-50 cursor-pointer'
+                      width={18}
+                    />
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DeleteAccount user={user} userDetails={userDetails} />
+            </Dialog>
+          </div>
 
           <DialogFooter>
-            <Button type='submit'>Save changes</Button>
+            <Button isLoading={isloading} type='submit'>
+              Save changes
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
