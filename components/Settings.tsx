@@ -25,12 +25,14 @@ import useLoadImage from '@/hooks/useLoadImage';
 import { ChangePassword } from './ChangePassword';
 import { useState } from 'react';
 import { DeleteAccount } from './DeleteAccount';
+import { ChangeEmail } from './ChangeEmail';
 
 const SettingsPage = () => {
   const { user, userDetails } = useUser();
   const supabaseClient = useSupabaseClient();
   const [isloading, setIsloading] = useState(false);
   const router = useRouter();
+  const loadImage = useLoadImage(userDetails);
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
@@ -38,6 +40,20 @@ const SettingsPage = () => {
       image: null,
     },
   });
+
+  const handleLogout = async () => {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+      console.log(error);
+    }
+
+    router.refresh();
+  };
+
+  if (!user) {
+    return null;
+  }
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
     try {
@@ -88,7 +104,6 @@ const SettingsPage = () => {
       window.location.reload();
     }
   };
-  const loadImage = useLoadImage(userDetails);
 
   return (
     <Dialog>
@@ -151,14 +166,21 @@ const SettingsPage = () => {
             <Separator className='bg-white opacity-20 ' />
             <div className='mt-3 flex justify-between'>
               {/* change email */}
+
               <div>
                 <Label className=' '>Email</Label>
                 <p className='opacity-50 text-xs '>{user?.email}</p>
               </div>
-              <Button className='bg-transparent rounded w-30 border border-white border-opacity-10 hover:bg-[#2C2C2C] h-8 text-xs text-white'>
-                Change Email
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className='bg-transparent rounded w-30 border border-white border-opacity-10 hover:bg-[#2C2C2C] h-8 text-xs text-white'>
+                    Change Email
+                  </Button>
+                </DialogTrigger>
+                <ChangeEmail />
+              </Dialog>
             </div>
+
             {/* change password */}
 
             <div className='mt-3 flex justify-between'>
@@ -184,7 +206,10 @@ const SettingsPage = () => {
 
             {/* log out all devices */}
 
-            <div className='flex items-center w-full justify-between group mt-4'>
+            <div
+              className='flex items-center w-full justify-between group mt-4 cursor-pointer'
+              onClick={handleLogout}
+            >
               <div>
                 <Label>Log out of all devices</Label>
                 <p className='opacity-50 text-xs '>

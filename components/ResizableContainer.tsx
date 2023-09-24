@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import { Resizable } from 'react-resizable';
 
-const ResizableContainer = ({ children }: { children: React.ReactNode }) => {
+const ResizableContainer = ({
+  children,
+  isNavbarOpen,
+}: {
+  children: React.ReactNode;
+  isNavbarOpen: boolean;
+}) => {
   const [width, setWidth] = useState(280);
 
   const onResize = (event: any, { size }: { size: { width: number } }) => {
@@ -21,7 +27,9 @@ const ResizableContainer = ({ children }: { children: React.ReactNode }) => {
     >
       <div
         style={{ width: `${width}px` }}
-        className='relative navbar border-r-[#282A2D]  border-r h-screen w-full bg-[#202020] '
+        className={`relative navbar border-r-[#282A2D] ${
+          !isNavbarOpen && 'hidden'
+        }  border-r h-screen w-full bg-[#202020] `}
       >
         {children}
       </div>
