@@ -50,6 +50,8 @@ const Navbar: React.FC<NavbarProps> = ({ projects, favorito }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(true);
   const uploadModal = useUploadModal();
 
+  console.log(user);
+
   const toggleNavbar = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
@@ -64,23 +66,22 @@ const Navbar: React.FC<NavbarProps> = ({ projects, favorito }) => {
     }
   }, [isNavbarOpen, navbarControls]);
 
-  if (!user) {
-    return null;
-  }
-
   const onClick = () => {
     return uploadModal.onOpen();
   };
+  // if (!user) {
+  //   return null;
+  // }
 
   return (
     <>
       <motion.div
         initial={{ x: '-100%' }}
-        className='group'
+        className='group sm:block hidden '
         animate={navbarControls}
       >
         <div
-          className={`hover:bg-[#252525] ${
+          className={` hover:bg-[#252525] ${
             isNavbarOpen ? 'group-hover:block hidden' : 'block'
           }  z-50 fixed top-2.5 ${
             isNavbarOpen ? 'right-0' : 'left-[10px]'

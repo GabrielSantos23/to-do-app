@@ -58,7 +58,7 @@ export function DeleteAccount({ user, userDetails }: DeleteAccountProps) {
       });
 
       router.refresh();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting deletion request:', error.message);
       toast({
         title:

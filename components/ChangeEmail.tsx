@@ -30,7 +30,7 @@ export function ChangeEmail() {
     }
 
     try {
-      const { user, error } = await supabase.auth.updateUser({
+      const { error } = await supabase.auth.updateUser({
         email: newEmail,
       });
 
@@ -63,8 +63,9 @@ export function ChangeEmail() {
     }
 
     try {
+      const email = user?.email ? user.email : '';
       const { error } = await supabase.auth.signInWithPassword({
-        email: user?.email,
+        email: email,
         password: passwordInput,
       });
 

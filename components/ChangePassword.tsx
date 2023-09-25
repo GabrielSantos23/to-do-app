@@ -45,8 +45,9 @@ export function ChangePassword() {
     }
 
     try {
+      const email = user?.email ? user.email : '';
       const { error } = await supabase.auth.signInWithPassword({
-        email: user?.email,
+        email: email,
         password: currentPassword,
       });
 
