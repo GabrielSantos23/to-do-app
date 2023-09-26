@@ -71,7 +71,7 @@ const ProjectList: React.FC<{
               {projects.map((project, index) => (
                 <Draggable
                   key={project?.id}
-                  draggableId={project?.id}
+                  draggableId={project?.id || index}
                   index={index}
                 >
                   {(provided) => (

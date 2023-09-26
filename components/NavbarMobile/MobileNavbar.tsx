@@ -12,13 +12,15 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import Image from 'next/image';
-import ProfileDetails from './ProfileDetails';
+import ProfileDetails from '../Navbar/ProfileDetails';
 import useLoadImage from '@/hooks/useLoadImage';
+import FavoritesMobile from './FavoritesMobile';
+import WorkspaceMobile from './WorkspaceMobile';
 
 interface MobileNavbarProps {
   projects: Database['public']['Tables']['projects']['Row'][];
   favorito: any;
-  children: React.ReactNode;
+  children: any;
 }
 
 const MobileNavbar: React.FC<MobileNavbarProps> = ({
@@ -56,8 +58,8 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
   };
   return (
     <>
-      <div className='flex flex-col  w-full'>
-        <div className='flex sm:hidden    relative h-10 items-center justify- bg-[#191919] border-b border-stone-500/50    '>
+      <div className='flex flex-col sm:hidden    w-full'>
+        <div className='flex   relative h-10 items-center justify- bg-[#191919] border-b border-stone-500/50    '>
           <button
             onClick={toggleNavbar}
             className='
@@ -97,15 +99,26 @@ const MobileNavbar: React.FC<MobileNavbarProps> = ({
             </DropdownMenu>
           </div>
         </div>
-        <div className='flex'>
+        <div className='relative'>
           <motion.div
-            className='h-full  '
-            initial={{ x: '-100%' }} // Define a posição inicial fora da tela
+            className='h-screen  z-[10]  absolute w-[80%] bg-[#202020] '
+            initial={{ x: '-100%' }}
             animate={navbarControls}
           >
-            a
+            <div>
+              {favorito && (
+                <FavoritesMobile projects={projects} favorito={favorito} />
+              )}
+              <WorkspaceMobile projects={projects} />
+            </div>
           </motion.div>
-          {children}
+          <div
+            className={` w-full absolute top-0   ${
+              isNavbarOpen ? 'w-[20%] right-0 overflow-x-hidden ' : ''
+            } `}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </>

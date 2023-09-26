@@ -50,18 +50,14 @@ const Navbar: React.FC<NavbarProps> = ({ projects, favorito }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(true);
   const uploadModal = useUploadModal();
 
-  console.log(user);
-
   const toggleNavbar = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
   const navbarControls = useAnimation();
   useEffect(() => {
     if (isNavbarOpen) {
-      // Abra a barra de navegação
       navbarControls.start({ x: 0 });
     } else {
-      // Feche a barra de navegação (coloque-a para fora da tela)
       navbarControls.start({ x: '-100%' });
     }
   }, [isNavbarOpen, navbarControls]);

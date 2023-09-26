@@ -2,7 +2,7 @@ import getFavoriteItems from '@/actions/getFavoriteItems';
 import getProjectsByOrder from '@/actions/getProjectsByOrder';
 import Kbar from '@/components/Kbar/Kbar';
 import KbarProvider from '@/components/Kbar/KbarProvide';
-import MobileNavbar from '@/components/Navbar/MobileNavbar';
+import MobileNavbar from '@/components/NavbarMobile/MobileNavbar';
 import Navbar from '@/components/Navbar/Navbar';
 import { Toaster } from '@/components/ui/toaster';
 import ModalProvider from '@/providers/ModalProvider';
@@ -26,9 +26,11 @@ const LayoutComponent: React.FC<LayoutComponentProps> = async ({
         <ModalProvider />
         <Toaster />
         <Navbar projects={projects} favorito={favorito} />
-        <MobileNavbar projects={projects} favorito={favorito}>
-          {children}
-        </MobileNavbar>
+        <MobileNavbar
+          projects={projects}
+          favorito={favorito}
+          children={children}
+        />
 
         <div className='sm:block hidden'>{children}</div>
       </KbarProvider>
